@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  db-odoo:
+    image: postgres:9.5
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+  odoo:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+      - GIT_ENTERPRISE_URL=<GIT ENTERPRISE URL>
+    depends_on:
+      - db-odoo
+    command: /mnt/odoo-source/odoo-bin
+    ports:
+      - "8069:8069"
+      - "8072:8072"
+    environment:
+      RDS_HOSTNAME: db-odoo
+      RDS_PORT: 5432
+    links:
+      - "db-odoo:odoo"
